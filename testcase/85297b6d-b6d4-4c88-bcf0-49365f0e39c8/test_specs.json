@@ -1,0 +1,17 @@
+{
+  "name": "Performance - High Load Ticket Creation",
+  "description": "Measures the system's ability to handle multiple concurrent ticket creation requests without significant degradation.",
+  "test_type": "performance",
+  "input": "Simultaneous POST /agent/message requests (e.g., 50) with valid ticket creation messages",
+  "output": "All responses are AgentResponse with success=True and ticket creation confirmation",
+  "success_criteria": [
+    "All requests complete within 5 seconds",
+    "No more than 5% of requests fail",
+    "No deadlocks or resource exhaustion"
+  ],
+  "error_scenarios": [
+    "Rate limiting by ServiceNow API",
+    "Resource exhaustion (memory, threads)",
+    "Increased error rate under load"
+  ]
+}
