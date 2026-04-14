@@ -1,0 +1,17 @@
+{
+  "name": "Integration - ServiceNow OAuth2 Authentication and Ticket Creation",
+  "description": "Tests the integration between OAuth2Authenticator and ServiceNowAPIClient for creating a ticket, ensuring token retrieval and API call succeed.",
+  "test_type": "integration",
+  "input": "Valid ticket data dictionary passed to ServiceNowAPIClient.create_ticket",
+  "output": "TicketResponse with success=True and a valid ticket_id",
+  "success_criteria": [
+    "OAuth2Authenticator.get_token is called and returns a valid token",
+    "ServiceNowAPIClient.create_ticket returns TicketResponse.success=True",
+    "TicketResponse.ticket_id is not None"
+  ],
+  "error_scenarios": [
+    "Invalid ServiceNow credentials",
+    "Token retrieval failure",
+    "ServiceNow API returns error"
+  ]
+}
