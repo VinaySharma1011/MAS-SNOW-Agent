@@ -1,0 +1,17 @@
+{
+  "name": "Performance - Response Time for Knowledge Base Query",
+  "description": "Measures the response time for a general query that triggers the RAG pipeline (Azure AI Search + LLM) to ensure it meets performance requirements.",
+  "test_type": "performance",
+  "input": "POST /agent/message with user_message: 'How do I reset my password?'",
+  "output": "AgentResponse with success=True and a knowledge-based answer",
+  "success_criteria": [
+    "Total response time is less than 3 seconds",
+    "response.success is True",
+    "response.response contains relevant answer or fallback message"
+  ],
+  "error_scenarios": [
+    "Azure AI Search latency",
+    "OpenAI LLM latency",
+    "Timeouts in external services"
+  ]
+}
