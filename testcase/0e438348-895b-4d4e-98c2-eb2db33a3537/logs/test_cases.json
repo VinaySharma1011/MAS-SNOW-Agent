@@ -1,0 +1,11 @@
+[
+  {
+    "id": "test_1",
+    "name": "Integration - Ticket Status Retrieval Workflow",
+    "description": "Test: Integration - Ticket Status Retrieval Workflow",
+    "type": "integration",
+    "status": "skipped",
+    "duration": 0.0,
+    "error": null
+  }
+]
