@@ -1,0 +1,16 @@
+{
+  "name": "Functional - Health Check Endpoint",
+  "description": "Verifies that the /health endpoint returns a successful status for service monitoring.",
+  "test_type": "functional",
+  "input": "GET /health",
+  "output": "JSON response with success=True and status='ok'",
+  "success_criteria": [
+    "HTTP status code is 200",
+    "response.success is True",
+    "response.status is 'ok'"
+  ],
+  "error_scenarios": [
+    "Application is not running",
+    "Unhandled exception in health check handler"
+  ]
+}
