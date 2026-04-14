@@ -1,0 +1,18 @@
+{
+  "name": "Integration - Ticket Status Retrieval Workflow",
+  "description": "Tests the end-to-end workflow for retrieving the status of an existing ticket, including intent classification, validation, ServiceNow API call, and response formatting.",
+  "test_type": "integration",
+  "input": "POST /agent/message with user_message: 'What is the status of ticket INC123456?'",
+  "output": "AgentResponse with success=True and response containing the ticket status",
+  "success_criteria": [
+    "Intent is classified as GET_STATUS",
+    "Validation passes for ticket_id",
+    "ServiceNowAPIClient.get_ticket_status is called with correct ticket_id",
+    "response.response contains 'status of ticket INC123456 is'"
+  ],
+  "error_scenarios": [
+    "Ticket ID not found in ServiceNow",
+    "ServiceNow API returns error",
+    "Malformed ticket ID"
+  ]
+}
