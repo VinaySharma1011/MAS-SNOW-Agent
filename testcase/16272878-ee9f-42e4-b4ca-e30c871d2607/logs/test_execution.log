@@ -1,0 +1,162 @@
+=== PYTEST EXECUTION LOG ===
+
+Exit Code: 1
+
+STDOUT:
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.0.3, pluggy-1.6.0 -- /tmp/aba_venv_cache/venv_1f8dc006ea1af1a4a17049eb6c382156/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.11.15', 'Platform': 'Linux-5.15.0-1102-azure-x86_64-with-glibc2.41', 'Packages': {'pytest': '9.0.3', 'pluggy': '1.6.0'}, 'Plugins': {'asyncio': '1.3.0', 'anyio': '4.13.0', 'json-report': '1.5.0', 'metadata': '3.1.1'}}
+rootdir: /tmp/test_venv_exec_b8kf62lt
+configfile: pytest.ini
+plugins: asyncio-1.3.0, anyio-4.13.0, json-report-1.5.0, metadata-3.1.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 4 items
+
+test_agent.py::test_integration_servicenow_oauth2_authentication_and_ticket_creation FAILED [ 25%]
+test_agent.py::test_integration_servicenow_oauth2_token_retrieval_failure PASSED [ 50%]
+test_agent.py::test_integration_servicenow_oauth2_invalid_credentials FAILED [ 75%]
+test_agent.py::test_integration_servicenow_api_returns_error FAILED      [100%]
+
+=================================== FAILURES ===================================
+____ test_integration_servicenow_oauth2_authentication_and_ticket_creation _____
+
+valid_ticket_data = {'category': 'inquiry', 'description': 'This is a test ticket created by integration test.', 'priority': '2', 'short_description': 'Test incident'}
+mock_authenticator = <MagicMock spec='OAuth2Authenticator' id='139927029934608'>
+
+    def test_integration_servicenow_oauth2_authentication_and_ticket_creation(valid_ticket_data, mock_authenticator):
+        """
+        Integration test for ServiceNow ticket creation using OAuth2Authenticator.
+        Ensures that get_token is called, a valid token is used, and ticket creation succeeds.
+        """
+        # Arrange
+        valid_token = "mocked-access-token"
+        mock_authenticator.get_token.return_value = valid_token
+    
+        # Patch the ServiceNowAPIClient.create_ticket to simulate API call
+        with patch.object(ServiceNowAPIClient, "create_ticket", autospec=True) as mock_create_ticket:
+            # Simulate successful ticket creation
+            mock_response = TicketResponse(success=True, ticket_id="INC0012345")
+            mock_create_ticket.return_value = mock_response
+    
+            client = ServiceNowAPIClient("https://example.service-now.com", mock_authenticator)
+    
+            # Act
+            response = client.create_ticket(valid_ticket_data)
+    
+            # Assert
+>           mock_authenticator.get_token.assert_called_once()
+
+test_agent.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <MagicMock name='mock.get_token' id='139927006070288'>
+
+    def assert_called_once(self):
+        """assert that the mock was called only once.
+        """
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to have been called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+>           raise AssertionError(msg)
+E           AssertionError: Expected 'get_token' to have been called once. Called 0 times.
+
+/usr/local/lib/python3.11/unittest/mock.py:918: AssertionError
+____________ test_integration_servicenow_oauth2_invalid_credentials ____________
+
+valid_ticket_data = {'category': 'inquiry', 'description': 'This is a test ticket created by integration test.', 'priority': '2', 'short_description': 'Test incident'}
+mock_authenticator = <MagicMock spec='OAuth2Authenticator' id='139927001242128'>
+
+    def test_integration_servicenow_oauth2_invalid_credentials(valid_ticket_data, mock_authenticator):
+        """
+        Integration error scenario: Invalid ServiceNow credentials.
+        Ensures that if ServiceNow API returns an authentication error, ticket creation fails.
+        """
+        # Arrange
+        valid_token = "mocked-access-token"
+        mock_authenticator.get_token.return_value = valid_token
+    
+        client = ServiceNowAPIClient("https://example.service-now.com", mock_authenticator)
+    
+        # Patch create_ticket to simulate ServiceNow API authentication error
+        with patch.object(ServiceNowAPIClient, "create_ticket", autospec=True) as mock_create_ticket:
+            mock_create_ticket.return_value = TicketResponse(success=False, ticket_id=None, error="Invalid credentials")
+    
+            # Act
+            response = client.create_ticket(valid_ticket_data)
+    
+            # Assert
+>           mock_authenticator.get_token.assert_called_once()
+
+test_agent.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <MagicMock name='mock.get_token' id='139927001236240'>
+
+    def assert_called_once(self):
+        """assert that the mock was called only once.
+        """
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to have been called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+>           raise AssertionError(msg)
+E           AssertionError: Expected 'get_token' to have been called once. Called 0 times.
+
+/usr/local/lib/python3.11/unittest/mock.py:918: AssertionError
+________________ test_integration_servicenow_api_returns_error _________________
+
+valid_ticket_data = {'category': 'inquiry', 'description': 'This is a test ticket created by integration test.', 'priority': '2', 'short_description': 'Test incident'}
+mock_authenticator = <MagicMock spec='OAuth2Authenticator' id='139927007141328'>
+
+    def test_integration_servicenow_api_returns_error(valid_ticket_data, mock_authenticator):
+        """
+        Integration error scenario: ServiceNow API returns error.
+        Ensures that if the ServiceNow API returns an error, ticket creation fails.
+        """
+        # Arrange
+        valid_token = "mocked-access-token"
+        mock_authenticator.get_token.return_value = valid_token
+    
+        client = ServiceNowAPIClient("https://example.service-now.com", mock_authenticator)
+    
+        # Patch create_ticket to simulate ServiceNow API error (e.g., 500 Internal Server Error)
+        with patch.object(ServiceNowAPIClient, "create_ticket", autospec=True) as mock_create_ticket:
+            mock_create_ticket.return_value = TicketResponse(success=False, ticket_id=None, error="Internal Server Error")
+    
+            # Act
+            response = client.create_ticket(valid_ticket_data)
+    
+            # Assert
+>           mock_authenticator.get_token.assert_called_once()
+
+test_agent.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <MagicMock name='mock.get_token' id='139927007143440'>
+
+    def assert_called_once(self):
+        """assert that the mock was called only once.
+        """
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to have been called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+>           raise AssertionError(msg)
+E           AssertionError: Expected 'get_token' to have been called once. Called 0 times.
+
+/usr/local/lib/python3.11/unittest/mock.py:918: AssertionError
+--------------------------------- JSON report ----------------------------------
+report saved to: /tmp/test_venv_exec_b8kf62lt/pytest_report.json
+=========================== short test summary info ============================
+FAILED test_agent.py::test_integration_servicenow_oauth2_authentication_and_ticket_creation
+FAILED test_agent.py::test_integration_servicenow_oauth2_invalid_credentials
+FAILED test_agent.py::test_integration_servicenow_api_returns_error - Asserti...
+========================= 3 failed, 1 passed in 0.17s ==========================
+
+
+STDERR:
