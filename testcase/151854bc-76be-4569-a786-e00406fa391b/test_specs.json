@@ -1,0 +1,18 @@
+{
+  "name": "Functional - Create Ticket via API Endpoint",
+  "description": "Validates that a user can create a ServiceNow ticket by sending a properly formatted message to the /agent/message endpoint.",
+  "test_type": "functional",
+  "input": "POST /agent/message with user_message: 'Please create a ticket. short description: Printer not working, category: Hardware, priority: High'",
+  "output": "AgentResponse with success=True and response containing confirmation of ticket creation",
+  "success_criteria": [
+    "HTTP status code is 200",
+    "response.success is True",
+    "response.response contains 'Ticket' and 'created successfully'",
+    "No error or error_type fields present"
+  ],
+  "error_scenarios": [
+    "ServiceNow API unavailable",
+    "Missing required fields in user_message",
+    "OAuth2 authentication failure"
+  ]
+}
