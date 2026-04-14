@@ -1,0 +1,89 @@
+=== PYTEST EXECUTION LOG ===
+
+Exit Code: 1
+
+STDOUT:
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.0.3, pluggy-1.6.0 -- /tmp/aba_venv_cache/venv_1f8dc006ea1af1a4a17049eb6c382156/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.11.15', 'Platform': 'Linux-5.15.0-1102-azure-x86_64-with-glibc2.41', 'Packages': {'pytest': '9.0.3', 'pluggy': '1.6.0'}, 'Plugins': {'asyncio': '1.3.0', 'anyio': '4.13.0', 'json-report': '1.5.0', 'metadata': '3.1.1'}}
+rootdir: /tmp/test_venv_exec_cqr7lkk1
+configfile: pytest.ini
+plugins: asyncio-1.3.0, anyio-4.13.0, json-report-1.5.0, metadata-3.1.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 1 item
+
+test_agent.py::test_security_api_endpoint_unauthorized_access FAILED     [100%]
+
+=================================== FAILURES ===================================
+________________ test_security_api_endpoint_unauthorized_access ________________
+
+agent_api_client = <test_agent.agent_api_client.<locals>.MockClient object at 0x7f63c259a850>
+mock_agent_response = <class 'test_agent.mock_agent_response.<locals>.AgentResponse'>
+
+    @pytest.mark.security
+    def test_security_api_endpoint_unauthorized_access(agent_api_client, mock_agent_response):
+        """
+        Ensures that endpoints do not leak sensitive information or stack traces on unauthorized or malformed requests.
+        """
+        # Simulate malformed JSON (missing required fields)
+        with patch("builtins.print"):  # Patch print to avoid debug output
+            response_obj = agent_api_client.post("/agent/message", json={})
+            response_json = response_obj.json()
+    
+            # Create AgentResponse instance for assertion
+            response = mock_agent_response(
+                success=response_json.get("success"),
+                error_type=response_json.get("error_type"),
+                error_message=response_json.get("error_message")
+            )
+    
+            # Assert success is False
+            assert response.success is False, "Expected success to be False for malformed request"
+    
+            # Assert error_type is 'validation_error' or 'http_error'
+            assert response.error_type in ("validation_error", "http_error"), \
+                f"Expected error_type to be 'validation_error' or 'http_error', got {response.error_type}"
+    
+            # Assert no stack trace or sensitive config is present in the error message
+            error_message = response.error_message or ""
+            sensitive_keywords = [
+                "Traceback", "Exception", "KeyError", "os.environ", "SECRET", "PASSWORD", "token", "config"
+            ]
+            for keyword in sensitive_keywords:
+                assert keyword not in error_message, f"Sensitive info '{keyword}' leaked in error message: {error_message}"
+    
+            # Simulate a scenario where stack trace is returned (should fail)
+            bad_response_json = {
+                "success": False,
+                "error_type": "validation_error",
+                "error_message": "Traceback (most recent call last):\n  File \"agent.py\", line 42, in handle\n    ...\nKeyError: 'message'"
+            }
+            bad_response = mock_agent_response(
+                success=bad_response_json["success"],
+                error_type=bad_response_json["error_type"],
+                error_message=bad_response_json["error_message"]
+            )
+            for keyword in sensitive_keywords:
+>               assert keyword not in bad_response.error_message, (
+                    f"Test should fail if sensitive info '{keyword}' is present in error message"
+                )
+E               AssertionError: Test should fail if sensitive info 'Traceback' is present in error message
+E               assert 'Traceback' not in "Traceback (...r: 'message'"
+E                 
+E                 'Traceback' is contained here:
+E                   Traceback (most recent call last):
+E                 ? +++++++++
+E                     File "agent.py", line 42, in handle
+E                       ...
+E                   KeyError: 'message'
+
+test_agent.py:97: AssertionError
+--------------------------------- JSON report ----------------------------------
+report saved to: /tmp/test_venv_exec_cqr7lkk1/pytest_report.json
+=========================== short test summary info ============================
+FAILED test_agent.py::test_security_api_endpoint_unauthorized_access - Assert...
+============================== 1 failed in 0.05s ===============================
+
+
+STDERR:
