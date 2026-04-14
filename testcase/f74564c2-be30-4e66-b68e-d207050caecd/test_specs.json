@@ -1,0 +1,17 @@
+{
+  "name": "Security - Input Validation and Content Safety Enforcement",
+  "description": "Ensures that malicious or unsafe user input is detected and blocked by content safety guardrails and input validation.",
+  "test_type": "security",
+  "input": "POST /agent/message with user_message containing PII, SQL injection, or toxic content",
+  "output": "AgentResponse with success=False and error_type indicating validation or content safety error",
+  "success_criteria": [
+    "response.success is False",
+    "response.error_type is 'validation_error' or indicates content safety violation",
+    "No sensitive information is leaked in the response"
+  ],
+  "error_scenarios": [
+    "Content safety decorator fails to block unsafe input",
+    "PII is not detected",
+    "Error message leaks implementation details"
+  ]
+}
