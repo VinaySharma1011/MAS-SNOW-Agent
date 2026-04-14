@@ -1,0 +1,16 @@
+{
+  "name": "Security - API Endpoint Unauthorized Access",
+  "description": "Ensures that endpoints do not leak sensitive information or stack traces on unauthorized or malformed requests.",
+  "test_type": "security",
+  "input": "POST /agent/message with malformed JSON or missing required fields",
+  "output": "AgentResponse with success=False and error_type indicating validation or http error",
+  "success_criteria": [
+    "response.success is False",
+    "response.error_type is 'validation_error' or 'http_error'",
+    "No stack trace or sensitive config is present in the response"
+  ],
+  "error_scenarios": [
+    "Stack trace is returned in error response",
+    "Sensitive environment variables are leaked"
+  ]
+}
