@@ -1,0 +1,92 @@
+=== PYTEST EXECUTION LOG ===
+
+Exit Code: 1
+
+STDOUT:
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.0.3, pluggy-1.6.0 -- /tmp/aba_venv_cache/venv_1f8dc006ea1af1a4a17049eb6c382156/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.11.15', 'Platform': 'Linux-5.15.0-1102-azure-x86_64-with-glibc2.41', 'Packages': {'pytest': '9.0.3', 'pluggy': '1.6.0'}, 'Plugins': {'asyncio': '1.3.0', 'anyio': '4.13.0', 'json-report': '1.5.0', 'metadata': '3.1.1'}}
+rootdir: /tmp/test_venv_exec_o7twdm6g
+configfile: pytest.ini
+plugins: asyncio-1.3.0, anyio-4.13.0, json-report-1.5.0, metadata-3.1.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 4 items
+
+test_agent.py::test_integration_ticket_status_retrieval_workflow ERROR   [ 25%]
+test_agent.py::test_integration_ticket_status_retrieval_ticket_not_found ERROR [ 50%]
+test_agent.py::test_integration_ticket_status_retrieval_servicenow_api_error ERROR [ 75%]
+test_agent.py::test_integration_ticket_status_retrieval_malformed_ticket_id ERROR [100%]
+
+==================================== ERRORS ====================================
+_____ ERROR at setup of test_integration_ticket_status_retrieval_workflow ______
+
+    @pytest.fixture
+    def agent_instance():
+        """
+        Fixture to provide an Agent instance with mocked dependencies.
+        """
+        # We'll patch ServiceNowAPIClient in the test, so just return a basic Agent
+        # If Agent takes dependencies in constructor, patch as needed
+        from agent import Agent
+>       return Agent()
+               ^^^^^^^
+E       TypeError: 'module' object is not callable
+
+test_agent.py:16: TypeError
+_ ERROR at setup of test_integration_ticket_status_retrieval_ticket_not_found __
+
+    @pytest.fixture
+    def agent_instance():
+        """
+        Fixture to provide an Agent instance with mocked dependencies.
+        """
+        # We'll patch ServiceNowAPIClient in the test, so just return a basic Agent
+        # If Agent takes dependencies in constructor, patch as needed
+        from agent import Agent
+>       return Agent()
+               ^^^^^^^
+E       TypeError: 'module' object is not callable
+
+test_agent.py:16: TypeError
+_ ERROR at setup of test_integration_ticket_status_retrieval_servicenow_api_error _
+
+    @pytest.fixture
+    def agent_instance():
+        """
+        Fixture to provide an Agent instance with mocked dependencies.
+        """
+        # We'll patch ServiceNowAPIClient in the test, so just return a basic Agent
+        # If Agent takes dependencies in constructor, patch as needed
+        from agent import Agent
+>       return Agent()
+               ^^^^^^^
+E       TypeError: 'module' object is not callable
+
+test_agent.py:16: TypeError
+_ ERROR at setup of test_integration_ticket_status_retrieval_malformed_ticket_id _
+
+    @pytest.fixture
+    def agent_instance():
+        """
+        Fixture to provide an Agent instance with mocked dependencies.
+        """
+        # We'll patch ServiceNowAPIClient in the test, so just return a basic Agent
+        # If Agent takes dependencies in constructor, patch as needed
+        from agent import Agent
+>       return Agent()
+               ^^^^^^^
+E       TypeError: 'module' object is not callable
+
+test_agent.py:16: TypeError
+--------------------------------- JSON report ----------------------------------
+report saved to: /tmp/test_venv_exec_o7twdm6g/pytest_report.json
+=========================== short test summary info ============================
+ERROR test_agent.py::test_integration_ticket_status_retrieval_workflow - Type...
+ERROR test_agent.py::test_integration_ticket_status_retrieval_ticket_not_found
+ERROR test_agent.py::test_integration_ticket_status_retrieval_servicenow_api_error
+ERROR test_agent.py::test_integration_ticket_status_retrieval_malformed_ticket_id
+============================== 4 errors in 0.06s ===============================
+
+
+STDERR:
