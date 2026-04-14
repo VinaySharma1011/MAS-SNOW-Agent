@@ -1,0 +1,11 @@
+[
+  {
+    "id": "test_1",
+    "name": "Functional - Create Ticket via API Endpoint",
+    "description": "Test: Functional - Create Ticket via API Endpoint",
+    "type": "functional",
+    "status": "failed",
+    "duration": 0.0,
+    "error": "self = <test_agent.TestAgentMessageFunctional object at 0x7f74cbbf0bd0>\nclient = <starlette.testclient.TestClient object at 0x7f74cbbf3190>\nvalid_user_message = {'user_message': 'Please create a ticket. short description: Printer not working, category: Hardware, priority: High'}\nagent_response_success = {'response': 'Ticket INC123456 created successfully.', 'success': True}\n\n    def test_functional_create_ticket_via_api_endpoint(\n        self,\n        client,\n        valid_user_message,\n        agent_response_success\n    ):\n        \"\"\"\n        Functional test: Validates that a user can create a ServiceNow ticket by sending a properly formatted message\n        to the /agent/message endpoint. Verifies HTTP 200, success=True, confirmation message, and no error fields.\n        \"\"\"\n        # Patch the function that calls ServiceNow API to simulate ticket creation\n        with patch(\"app.create_servicenow_ticket\") as mock_create_ticket:\n            mock_create_ticket.return_value = {\n                \"ticket_id\": \"INC123456\",\n                \"status\": \"created\"\n            }\n            # Patch authentication to always succeed\n            with patch(\"app.get_oauth2_token\") as mock_auth:\n                mock_auth.return_value = \"mocked_token\"\n                response = client.post(\"/agent/message\", json=valid_user_message)\n    \n        assert response.status_code == 200, \"Expected HTTP 200\"\n        data = response.json()\n>       assert data.get(\"success\") is True, \"Expected success=True\"\nE       AssertionError: Expected success=True\nE       assert None is True\nE        +  where None = <built-in method get of dict object at 0x7f74cbbf2380>('success')\nE        +    where <built-in method get of dict object at 0x7f74cbbf2380> = {'user_message': 'Please create a ticket. short description: Printer not working, category: Hardware, priority: High', 'validation_status': 'valid'}.get\n\ntest_agent.py:82: AssertionError"
+  }
+]
